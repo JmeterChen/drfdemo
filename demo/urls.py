@@ -15,6 +15,9 @@ from .views import StudentView, StudentInfoView
 # v5
 from .views import StudentSimpleView, StudentSimpleInfoView
 
+# v6
+from .views import StudentViewSet, StudentInfoViewSet
+
 student_v1 = [
     path("students/", StudentAPIView.as_view()),
     re_path("^students/(?P<pk>\d+)/$", StudentInfoAPIView.as_view()),
@@ -42,6 +45,20 @@ student_v5 = [
     re_path("^students/(?P<pk>\d+)/$", StudentSimpleInfoView.as_view())
 ]
 
+
+# 视图集
+student_v6 = [
+    path("students/", StudentViewSet.as_view({
+	    "get": "get_list",
+	    "post": "post"
+    })),
+    re_path("^students/(?P<pk>\d+)/$", StudentInfoViewSet.as_view({
+	    "put": "put",
+	    "get": "get_student_info",
+	    "delete": "delete"
+    }))
+]
+
 urlpatterns = [
     # path("students/", StudentAPIView.as_view()),
     # re_path("^students/(?P<pk>\d+)/$", StudentInfoAPIView.as_view())
@@ -50,4 +67,5 @@ urlpatterns = [
     re_path("api/v3/", include(student_v3)),
     re_path("api/v4/", include(student_v4)),
     re_path("api/v5/", include(student_v5)),
+	re_path("api/v6/", include(student_v6)),
 ]

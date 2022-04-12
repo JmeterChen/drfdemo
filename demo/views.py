@@ -24,143 +24,143 @@ GET:        获取指定学生信息
 
 
 class StudentAPIView(APIView):
-
-    def get(self, request):
-        # 1.获取数据库中内容
-        db_data = Student.objects.all()
-
-        # 2. 实例化序列化器,获取序列化对象
-        serializer = StudentModelSerializers(instance=db_data, many=True)
-
-        # 3. 序列化从数据库中得到的内容并返回给客户端
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        # 1.获取请求内容
-        req_data = request.data
-
-        # 2.实例化序列化器,获取序列化对象
-        serializer = StudentModelSerializers(data=req_data)
-
-        # 3.反序列化[验证数据、保存数据到数据库]
-        print(serializer.is_valid())
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-
-        # 4.返回新增的模型数据到客户端
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+	
+	def get(self, request):
+		# 1.获取数据库中内容
+		db_data = Student.objects.all()
+		
+		# 2. 实例化序列化器,获取序列化对象
+		serializer = StudentModelSerializers(instance=db_data, many=True)
+		
+		# 3. 序列化从数据库中得到的内容并返回给客户端
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def post(self, request):
+		# 1.获取请求内容
+		req_data = request.data
+		
+		# 2.实例化序列化器,获取序列化对象
+		serializer = StudentModelSerializers(data=req_data)
+		
+		# 3.反序列化[验证数据、保存数据到数据库]
+		print(serializer.is_valid())
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		
+		# 4.返回新增的模型数据到客户端
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class StudentInfoAPIView(APIView):
-    def get(self, request, pk):
-        """获取一条学生信息"""
-        # 1. 使用pk作为条件获取模型对象
-        try:
-            # student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
-            # print(type(student))
-            student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
-            print(type(student))
-        except Student.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        # 2. 序列化
-        serializer = StudentModelSerializers(instance=student)
-
-        # 3.返回结果
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request, pk):
-        # 1.使用 pk 作为条件获取模型对象
-        try:
-            # student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
-            # print(type(student))
-            student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
-            # print(type(student))
-        except Student.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        # 2.获取客户端提交的数据
-
-        req_data = request.data
-
-        # 3.反序列化【验证数据和数据保存】
-        serializer = StudentModelSerializers(instance=student, data=req_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        # 4.返回结果
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, pk):
-        # 1.使用 pk 作为条件获取模型对象 直接删除，并且接口是幂等的！
-        try:
-            student = Student.objects.get(id=pk).delete()
-            print(type(student))
-        except Student.DoesNotExist:
-            pass
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+	def get(self, request, pk):
+		"""获取一条学生信息"""
+		# 1. 使用pk作为条件获取模型对象
+		try:
+			# student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
+			# print(type(student))
+			student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
+			print(type(student))
+		except Student.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		
+		# 2. 序列化
+		serializer = StudentModelSerializers(instance=student)
+		
+		# 3.返回结果
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def put(self, request, pk):
+		# 1.使用 pk 作为条件获取模型对象
+		try:
+			# student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
+			# print(type(student))
+			student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
+		# print(type(student))
+		except Student.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		
+		# 2.获取客户端提交的数据
+		
+		req_data = request.data
+		
+		# 3.反序列化【验证数据和数据保存】
+		serializer = StudentModelSerializers(instance=student, data=req_data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		
+		# 4.返回结果
+		return Response(data=serializer.data, status=status.HTTP_200_OK)
+	
+	def delete(self, request, pk):
+		# 1.使用 pk 作为条件获取模型对象 直接删除，并且接口是幂等的！
+		try:
+			student = Student.objects.get(id=pk).delete()
+			print(type(student))
+		except Student.DoesNotExist:
+			pass
+		
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 """GenericAPIView 通用视图类"""
 
 
 class StudentGenericAPIView(GenericAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
-
-    def get(self, request):
-        # 1. 从数据库中读取学生列表信息
-        instance = self.get_queryset()
-        # 2. 序列化
-        serializer = self.get_serializer(instance=instance, many=True)
-
-        # 3.转换数据并返回给客户端
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        # 1.获取请求内容
-        req_data = request.data
-
-        # 2.实例化序列化器,获取序列化对象
-        serializer = self.get_serializer(data=req_data)
-
-        # 3.反序列化[验证数据、保存数据到数据库]
-        # print(serializer.is_valid())
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-
-        # 4.返回新增的模型数据到客户端
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+	
+	def get(self, request):
+		# 1. 从数据库中读取学生列表信息
+		instance = self.get_queryset()
+		# 2. 序列化
+		serializer = self.get_serializer(instance=instance, many=True)
+		
+		# 3.转换数据并返回给客户端
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def post(self, request):
+		# 1.获取请求内容
+		req_data = request.data
+		
+		# 2.实例化序列化器,获取序列化对象
+		serializer = self.get_serializer(data=req_data)
+		
+		# 3.反序列化[验证数据、保存数据到数据库]
+		# print(serializer.is_valid())
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		
+		# 4.返回新增的模型数据到客户端
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class StudentInfoGenericAPIView(GenericAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
-
-    def get(self, request, pk):
-        # 1. 使用pk作为条件获取模型对象
-        instance = self.get_object()
-        # 2.序列化
-        serializer = self.get_serializer(instance=instance)
-        # 3. 返回结果
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        # 1. 使用pk作为条件获取模型对象
-        instance = self.get_object()
-        # 2. 序列化和数据校验
-        serializer = self.get_serializer(instance=instance, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        # 3.返回客户端结果
-        return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
-
-    def delete(self, request, pk):
-        # 1. 使用pk作为条件获取模型对象
-        instance = self.get_object()
-        instance.delete()
-        return Response(status.HTTP_200_OK)
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+	
+	def get(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		# 2.序列化
+		serializer = self.get_serializer(instance=instance)
+		# 3. 返回结果
+		return Response(serializer.data)
+	
+	def put(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		# 2. 序列化和数据校验
+		serializer = self.get_serializer(instance=instance, data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		# 3.返回客户端结果
+		return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+	
+	def delete(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		instance.delete()
+		return Response(status.HTTP_200_OK)
 
 
 """
@@ -173,32 +173,32 @@ from rest_framework.mixins import DestroyModelMixin         删除一条数据�
 """
 
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
-    DestroyModelMixin
+	DestroyModelMixin
 
 
 class StudentMixinAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+	
+	def get(self, request):
+		return self.list(request)
+	
+	def post(self, request):
+		return self.create(request)
 
 
 class StudentInfoMixinAPIView(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
-
-    def get(self, request, pk):
-        return self.retrieve(request, pk=pk)
-
-    def put(self, request, pk):
-        return self.update(request, pk)
-
-    def delete(self, request, pk):
-        return self.destroy(request, pk=pk)
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+	
+	def get(self, request, pk):
+		return self.retrieve(request, pk=pk)
+	
+	def put(self, request, pk):
+		return self.update(request, pk)
+	
+	def delete(self, request, pk):
+		return self.destroy(request, pk=pk)
 
 
 """
@@ -216,13 +216,13 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,
 
 
 class StudentView(ListAPIView, CreateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
 
 
 class StudentInfoView(RetrieveAPIView, UpdateAPIView, DestroyAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
 
 
 """
@@ -238,10 +238,103 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 
 
 class StudentSimpleView(ListCreateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
 
 
 class StudentSimpleInfoView(RetrieveUpdateDestroyAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentModelSerializers
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+
+
+"""
+上面的接口在实现过程中，也存在了代码重复的情况，如果我们合并成一个接口类，则需要考虑两个问题：
+1. 路由的合并问题；因为路由指定视图类
+2. get 方法重复问题；
+
+
+drf 提供了视图集可以解决上面的问题
+ViewSet  --> APIView 中的代码重复问题
+"""
+
+from rest_framework.viewsets import ViewSet
+
+
+class StudentViewSet(ViewSet):
+	
+	def get_list(self, request):
+		# 1.获取数据库中内容
+		db_data = Student.objects.all()
+		
+		# 2. 实例化序列化器,获取序列化对象
+		serializer = StudentModelSerializers(instance=db_data, many=True)
+		
+		# 3. 序列化从数据库中得到的内容并返回给客户端
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def post(self, request):
+		# 1.获取请求内容
+		req_data = request.data
+		
+		# 2.实例化序列化器,获取序列化对象
+		serializer = StudentModelSerializers(data=req_data)
+		
+		# 3.反序列化[验证数据、保存数据到数据库]
+		print(serializer.is_valid())
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		
+		# 4.返回新增的模型数据到客户端
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
+	
+	
+class StudentInfoViewSet(ViewSet):
+	
+	def get_student_info(self, request, pk):
+		"""获取一条学生信息"""
+		# 1. 使用pk作为条件获取模型对象
+		try:
+			# student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
+			# print(type(student))
+			student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
+			print(type(student))
+		except Student.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		
+		# 2. 序列化
+		serializer = StudentModelSerializers(instance=student)
+		
+		# 3.返回结果
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def put(self, request, pk):
+		# 1.使用 pk 作为条件获取模型对象
+		try:
+			# student = Student.objects.filter(id=pk)   # 这里注意 filter 返回的是 <class 'django.db.models.query.QuerySet'> 对象
+			# print(type(student))
+			student = Student.objects.get(id=pk)  # 这里注意用 get 方法返回的是 <class 'stuapi.models.Student'> 对象
+		# print(type(student))
+		except Student.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		
+		# 2.获取客户端提交的数据
+		
+		req_data = request.data
+		
+		# 3.反序列化【验证数据和数据保存】
+		serializer = StudentModelSerializers(instance=student, data=req_data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		
+		# 4.返回结果
+		return Response(data=serializer.data, status=status.HTTP_200_OK)
+	
+	def delete(self, request, pk):
+		# 1.使用 pk 作为条件获取模型对象 直接删除，并且接口是幂等的！
+		try:
+			student = Student.objects.get(id=pk).delete()
+			print(type(student))
+		except Student.DoesNotExist:
+			pass
+		
+		return Response(status=status.HTTP_204_NO_CONTENT)
