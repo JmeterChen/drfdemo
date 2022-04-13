@@ -111,7 +111,7 @@ class StudentGenericAPIView(GenericAPIView):
 	
 	def get(self, request):
 		# 1. 从数据库中读取学生列表信息
-		instance = self.get_queryset()
+		instance = self.get_queryset()  # GenericAPIView提供的 get_queryset
 		# 2. 序列化
 		serializer = self.get_serializer(instance=instance, many=True)
 		
@@ -254,7 +254,7 @@ class StudentSimpleInfoView(RetrieveUpdateDestroyAPIView):
 
 
 drf 提供了视图集可以解决上面的问题
-ViewSet  --> APIView 中的代码重复问题
+ViewSet  --> 基本视图集  解决了 APIView 中的代码重复问题
 """
 
 from rest_framework.viewsets import ViewSet
@@ -286,9 +286,6 @@ class StudentViewSet(ViewSet):
 		
 		# 4.返回新增的模型数据到客户端
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
-	
-	
-class StudentInfoViewSet(ViewSet):
 	
 	def get_student_info(self, request, pk):
 		"""获取一条学生信息"""
@@ -338,3 +335,123 @@ class StudentInfoViewSet(ViewSet):
 			pass
 		
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+"""
+GenericViewSet  --> 通用视图集  解决了 APIView 中的代码重复问题，同时让代码更加通用
+"""
+
+from rest_framework.viewsets import GenericViewSet
+
+
+class StudentGenericViewSet(GenericViewSet):
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+	
+	def list(self, request):
+		# 1. 从数据库中读取学生列表信息
+		instance = self.get_queryset()  # GenericAPIView提供的 get_queryset
+		# 2. 序列化
+		serializer = self.get_serializer(instance=instance, many=True)
+		
+		# 3.转换数据并返回给客户端
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	
+	def create(self, request):
+		# 1.获取请求内容
+		req_data = request.data
+		
+		# 2.实例化序列化器,获取序列化对象
+		serializer = self.get_serializer(data=req_data)
+		
+		# 3.反序列化[验证数据、保存数据到数据库]
+		# print(serializer.is_valid())
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		
+		# 4.返回新增的模型数据到客户端
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
+	
+	def retrieve(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		# 2.序列化
+		serializer = self.get_serializer(instance=instance)
+		# 3. 返回结果
+		return Response(serializer.data)
+	
+	def update(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		# 2. 序列化和数据校验
+		serializer = self.get_serializer(instance=instance, data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+		# 3.返回客户端结果
+		return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+	
+	def destroy(self, request, pk):
+		# 1. 使用pk作为条件获取模型对象
+		instance = self.get_object()
+		instance.delete()
+		return Response(status.HTTP_200_OK)
+
+
+"""
+写到这里 我们发现自定义的方法名好像在 mixins 组件类中出现过， 那么只要将对应的类继承，就不需要声明对应的方法了
+故：
+GenericViewSet 通用视图集 + 混入类即（mixins 组件类)
+"""
+
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
+	DestroyModelMixin
+
+
+class StudentMixinViewSet(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
+                          DestroyModelMixin):
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+
+
+"""
+上面的接口类看起来已经通过几行代码实现了最初的100+代码的工作量，但是继承了太多父类，还可以继续优化
+我们可以继续让一些已经合并的视图集父类让接口类继承即可
+ReadOnlyModelViewSet = mixins.RetrieveModelMixin + mixins.ListModelMixin + GenericViewSet
+	获取多条数据
+	获取一条数据
+"""
+
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+
+
+class StudentReadOnlyViewSet(ReadOnlyModelViewSet, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
+
+
+"""
+既然 ReadOnlyModelViewSet 类已经合并了三个类了，那有没有合并全部6个类的类呢？
+查看源码，其实是有的，那就是 ModelViewSet
+
+class ModelViewSet(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
+	'''
+    A viewset that provides default `create()`, `retrieve()`, `update()`,
+    `partial_update()`, `destroy()` and `list()` actions.
+    '''
+    pass
+
+"""
+
+from rest_framework.viewsets import ModelViewSet
+
+
+class StudentModelViewSet(ModelViewSet):        # 万能视图集
+	queryset = Student.objects.all()
+	serializer_class = StudentModelSerializers
