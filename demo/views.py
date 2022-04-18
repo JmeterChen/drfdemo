@@ -452,6 +452,31 @@ class ModelViewSet(mixins.CreateModelMixin,
 from rest_framework.viewsets import ModelViewSet
 
 
-class StudentModelViewSet(ModelViewSet):        # 万能视图集
+class StudentModelViewSet(ModelViewSet):  # 万能视图集
 	queryset = Student.objects.all()
 	serializer_class = StudentModelSerializers
+	
+	"""
+	使用上述 ModelViewSet 写法可以很快速的写出 某种对象的增删改查的接口，但是如果需要针对学生再加上比如登录的接口，那么新写一个
+	视图类好像有点多余，并且还要额外去定义路由，那么久失去了 drf 的简洁的特性了 drf 其实提供了这个能力
+	在视图集中附加 action 的声明
+	"""
+	
+	from rest_framework.decorators import action
+	
+	"""
+	action 装饰器接受参数：
+		- methods       required    声明该 action 对应请求的方法， 列表传递
+		- detail        required    声明该 action 的路径是否与单一资源对应
+			True    表示路径是 xxx/<pk>/action方法名/url_path
+			False   表示路径是 xxx/action方法名/url_path
+		- url_path:     optional    声明该 action 的路由尾缀, 定义的路径会把 action方法名在path的内容覆盖
+			例如：
+			 声明了 url_path，则path 为 students/<pk>/user/login/
+			 未声明 url_path，则path 为 students/<pk>/login/
+	"""
+	
+	@action(methods=["get"], detail=True, url_path="user/login")    #
+	def login(self, request, pk):
+		print("登录成功")
+		return Response({"msg": "ok"})

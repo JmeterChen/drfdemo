@@ -23,5 +23,7 @@ urlpatterns = [
     path("api/v2/", include("students.urls")),
     path("api/v1/", include("sers.urls")),
     path("req/", include("req.urls")),
-    path("demo/", include("demo.urls"))
+    path("demo/", include("demo.urls")),
+    path("homework/", include("homework.urls")),
+    path("opt/", include("opt.urls"))
 ]

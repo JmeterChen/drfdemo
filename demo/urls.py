@@ -54,15 +54,15 @@ student_v5 = [
 
 # ViewSet 普通视图集
 student_v6 = [
-    path("students/", StudentViewSet.as_view({
-	    "get": "get_list",
-	    "post": "post"
-    })),
-    re_path("^students/(?P<pk>\d+)/$", StudentViewSet.as_view({
-	    "put": "put",
-	    "get": "get_student_info",
-	    "delete": "delete"
-    }))
+	path("students/", StudentViewSet.as_view({
+		"get": "get_list",
+		"post": "post"
+	})),
+	re_path("^students/(?P<pk>\d+)/$", StudentViewSet.as_view({
+		"put": "put",
+		"get": "get_student_info",
+		"delete": "delete"
+	}))
 ]
 
 # GenericViewSet 通用视图集
@@ -117,7 +117,6 @@ student_v10 = [
 	}))
 ]
 
-
 urlpatterns = [
 	# path("students/", StudentAPIView.as_view()),
 	# re_path("^students/(?P<pk>\d+)/$", StudentInfoAPIView.as_view())
@@ -133,7 +132,6 @@ urlpatterns = [
 	re_path("api/v10/", include(student_v10)),
 ]
 
-
 """
 虽然使用 ModelViewSet 可以把视图函数精简到两行，但是路由配置代码确变得复杂了，drf里面有自动生成路由的组件
 """
@@ -146,7 +144,7 @@ router = SimpleRouter()
 
 # 2. 给路由去注册视图集
 router.register("api/v11/students", StudentModelViewSet, basename="api/v11/students")
-print(router.urls)
+# print(router.urls)
 
 # 3.把生成的路由列表和 urlpatterns 进行拼接
 
