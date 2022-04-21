@@ -10,6 +10,7 @@ from students.mySerializers import StudentModelSerializers
 from rest_framework import status
 
 from rest_framework.generics import GenericAPIView
+from demo.pagination import GeneralPaginator
 
 """
 GET:        获取所有学生信息
@@ -455,6 +456,9 @@ from rest_framework.viewsets import ModelViewSet
 class StudentModelViewSet(ModelViewSet):  # 万能视图集
 	queryset = Student.objects.all()
 	serializer_class = StudentModelSerializers
+	
+	# 配置分页器
+	pagination_class = GeneralPaginator
 	
 	"""
 	使用上述 ModelViewSet 写法可以很快速的写出 某种对象的增删改查的接口，但是如果需要针对学生再加上比如登录的接口，那么新写一个

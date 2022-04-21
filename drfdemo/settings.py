@@ -35,15 +35,17 @@ INSTALLED_APPS = [
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	"django_filters",       # 过滤器 Filtering
+	"django_filters",  # 过滤器 Filtering
 	"rest_framework",
-	"stuapi",       # django 原生实现的 API接口
-	"students",     # drf实现的 API接口
-	"sers",         # 序列化器
-	"req",          # 请求与响应,
-	"demo",         # APIView -> GenericAPIView -> 混合视图集  -> ModelViewSet
+	"coreapi",          # 老版 api 接口文档
+	"drf_yasg",         # 新版 swag 接口文档
+	"stuapi",  # django 原生实现的 API接口
+	"students",  # drf实现的 API接口
+	"sers",  # 序列化器
+	"req",  # 请求与响应,
+	"demo",  # APIView -> GenericAPIView -> 混合视图集  -> ModelViewSet
 	"homework",
-	"opt"
+	"opt",
 ]
 
 MIDDLEWARE = [
@@ -109,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
 	},
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -132,3 +133,9 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+	
+	# 接口文档生成
+	"DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.AutoSchema"
+}
