@@ -454,6 +454,16 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class StudentModelViewSet(ModelViewSet):  # 万能视图集
+	
+	"""
+	学生信息模型
+	create: 添加一个学生信息
+	read: 查询一个学生信息
+	list: 获取所有学生信息
+	update: 更新学生信息
+	delete: 删除学生信息
+	"""
+	
 	queryset = Student.objects.all()
 	serializer_class = StudentModelSerializers
 	
