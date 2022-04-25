@@ -20,7 +20,7 @@ from django.urls import path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.permissions import IsAuthenticated
 
-# swag 接口文档导入包
+# swagger 接口文档导入包
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
