@@ -10,5 +10,3 @@ from students.mySerializers import StudentModelSerializers
 class StudentModelViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializers
-
-

@@ -20,7 +20,7 @@ class A(Base):
         print("aaa:", aa)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     a = A()
     a.query_set = 22
     a.get()

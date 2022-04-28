@@ -34,21 +34,20 @@ class StudentView(View):
         # 1.1 验证客户端的数据
         # 2. 操作数据库，保存数据
         instance = Student.objects.create(
-            name=name,
-            sex=sex,
-            age=age,
-            classmate=classmate,
-            description=description
+            name=name, sex=sex, age=age, classmate=classmate, description=description
         )
         # 3.返回结果
-        return JsonResponse(data={
-            "name": instance.name,
-            "sex": instance.sex,
-            "age": instance.age,
-            "classmate": instance.classmate,
-            "description": instance.description,
-            "id": instance.pk,
-        }, status=201)
+        return JsonResponse(
+            data={
+                "name": instance.name,
+                "sex": instance.sex,
+                "age": instance.age,
+                "classmate": instance.classmate,
+                "description": instance.description,
+                "id": instance.pk,
+            },
+            status=201,
+        )
 
     def get(self, request):
         stu_list = list(Student.objects.values())
@@ -60,19 +59,21 @@ class StudentInfoView(View):
         """获取指定学生信息"""
         try:
             instance = Student.objects.get(pk=pk)
-            return JsonResponse(data={
-                "name": instance.name,
-                "sex": instance.sex,
-                "age": instance.age,
-                "classmate": instance.classmate,
-                "description": instance.description,
-                "id": instance.pk,
-            })
+            return JsonResponse(
+                data={
+                    "name": instance.name,
+                    "sex": instance.sex,
+                    "age": instance.age,
+                    "classmate": instance.classmate,
+                    "description": instance.description,
+                    "id": instance.pk,
+                }
+            )
         except Student.DoesNotExist:
             return JsonResponse(data=None, status=201, safe=False)
 
     def put(self, request, pk):
-        """更新一个学生的信息 """
+        """更新一个学生的信息"""
         # 1. 接收客户单提交的数据
         req_data = json.loads(request.body)
         name = req_data.get("name")
@@ -90,14 +91,16 @@ class StudentInfoView(View):
             instance.classmate = classmate
             instance.description = description
             instance.save()
-            return JsonResponse(data={
-                "name": instance.name,
-                "sex": instance.sex,
-                "age": instance.age,
-                "classmate": instance.classmate,
-                "description": instance.description,
-                "id": instance.pk,
-            })
+            return JsonResponse(
+                data={
+                    "name": instance.name,
+                    "sex": instance.sex,
+                    "age": instance.age,
+                    "classmate": instance.classmate,
+                    "description": instance.description,
+                    "id": instance.pk,
+                }
+            )
         except Student.DoesNotExist:
             return JsonResponse(data=None, status=201, safe=False)
 

@@ -8,5 +8,5 @@ from .views import StudentView, StudentAPIView
 
 urlpatterns = [
     path("student/v1/", StudentView.as_view()),
-    path("student/v2/", StudentAPIView.as_view())
+    path("student/v2/", StudentAPIView.as_view()),
 ]

@@ -11,7 +11,6 @@ from django.http.response import JsonResponse
 
 
 class UsersView(View):
-
     def get(self, request):
         """序列化-序列化阶段的调用"""
         # 1.获取模型对象数据

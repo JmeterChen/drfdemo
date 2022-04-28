@@ -8,7 +8,7 @@ from homework.models import Course
 
 
 class CourseModelSerializers(serializers.ModelSerializer):
-	class Meta:
-		model = Course
-		fields = "__all__"
-		# fields = ["product_id", "product_name", "operator"]
+    class Meta:
+        model = Course
+        fields = "__all__"
+        # fields = ["product_id", "product_name", "operator"]

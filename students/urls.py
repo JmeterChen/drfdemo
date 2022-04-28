@@ -11,6 +11,4 @@ from students.views import StudentModelViewSet
 router = DefaultRouter()
 router.register("stu", StudentModelViewSet, basename="stu_restful_api")
 
-urlpatterns = [
-
-              ] + router.urls
+urlpatterns = [] + router.urls

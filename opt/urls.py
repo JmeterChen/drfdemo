@@ -11,10 +11,10 @@ router = DefaultRouter()
 router.register("api/v2", OptModelViewSet, "v2")
 
 urlpatterns = [
-	path("api/v1/example/", ExampleView.as_view()),
-	path("api/v3/", OptAPIView.as_view()),
-	path("api/v4/", OptGenericAPIView.as_view()),
-	path("api/v5/", OptMixinAPIView.as_view())
+    path("api/v1/example/", ExampleView.as_view()),
+    path("api/v3/", OptAPIView.as_view()),
+    path("api/v4/", OptGenericAPIView.as_view()),
+    path("api/v5/", OptMixinAPIView.as_view()),
 ]
 
 urlpatterns += router.urls

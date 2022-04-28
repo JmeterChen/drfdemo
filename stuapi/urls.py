@@ -10,5 +10,5 @@ from stuapi.views import StudentView, StudentInfoView
 
 urlpatterns = [
     path("students/", StudentView.as_view()),
-    re_path("^students/(?P<pk>\d+)/$", StudentInfoView.as_view())
+    re_path("^students/(?P<pk>\d+)/$", StudentInfoView.as_view()),
 ]

@@ -61,7 +61,9 @@ def check_name_prefix(data):
     :return:
     """
     if data.startswith("hello"):
-        raise serializers.ValidationError(detail="姓名不可以以hello开头", code="check_name_prefix")
+        raise serializers.ValidationError(
+            detail="姓名不可以以hello开头", code="check_name_prefix"
+        )
     return data
 
 
@@ -77,13 +79,18 @@ class User2Serializers(serializers.Serializer):
     # 返回给客户端字段 = serializers.字段类型(选项=选项值,)
     id = serializers.IntegerField(read_only=True)  # 表明该字段仅用于序列化输出，默认为False
     # validators 外部验证函数选项，值是一个列表，列表得到的成员是函数名，不能是字符串！
-    name = serializers.CharField(required=True, validators=[check_name_prefix])  # 表明该字段用于反序列化输入校验为必填，默认为False
-    employee_id = serializers.IntegerField(max_value=999999, min_value=420000,
-                                           # 这里可以添加 error_messages 参数，当指定请求参数不符合校验时，提示相应报错。
-                                           error_messages={
-                                               "min_value": "The value of employee_id Must be >= 420000",
-                                               "max_value": "The value of employee_id Must be <= 999999",
-                                           })  #
+    name = serializers.CharField(
+        required=True, validators=[check_name_prefix]
+    )  # 表明该字段用于反序列化输入校验为必填，默认为False
+    employee_id = serializers.IntegerField(
+        max_value=999999,
+        min_value=420000,
+        # 这里可以添加 error_messages 参数，当指定请求参数不符合校验时，提示相应报错。
+        error_messages={
+            "min_value": "The value of employee_id Must be >= 420000",
+            "max_value": "The value of employee_id Must be <= 999999",
+        },
+    )  #
     age = serializers.CharField(max_length=3, min_length=1)
     sex = serializers.BooleanField()
     create_time = serializers.DateTimeField(read_only=True)
@@ -117,13 +124,17 @@ class User2Serializers(serializers.Serializer):
         print(f"data:{data}")
         if data in ["Kobe", "James", "Jordan"]:
             # 在序列化器中，验证失败可以通过抛出异常的方式来告知 is_valid
-            raise serializers.ValidationError(detail="姓名不可以是Kobe、James or Jordan", code="validate_name")
+            raise serializers.ValidationError(
+                detail="姓名不可以是Kobe、James or Jordan", code="validate_name"
+            )
         return data
 
     def validate_age(self, data):
         _data = int(data)
         if _data >= 150:
-            raise serializers.ValidationError(detail="age 最大为150 岁", code="validate_age")
+            raise serializers.ValidationError(
+                detail="age 最大为150 岁", code="validate_age"
+            )
         if _data < 0:
             raise serializers.ValidationError(detail="age 最小为0 岁", code="validate_age")
         return data

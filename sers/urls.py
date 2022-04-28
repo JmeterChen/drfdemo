@@ -10,6 +10,4 @@ from django.urls import path
 from sers.views import UsersView
 
 
-urlpatterns = [
-    path("user/", UsersView.as_view())
-]
+urlpatterns = [path("user/", UsersView.as_view())]

@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 class Student(models.Model):
     """学生信息"""
+
     name = models.CharField(max_length=255, verbose_name="姓名")
     sex = models.BooleanField(default=1, verbose_name="性别")
     age = models.IntegerField(verbose_name="年龄")

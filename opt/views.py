@@ -7,19 +7,19 @@ from rest_framework.authentication import BaseAuthentication, SessionAuthenticat
 
 
 class ExampleView(APIView):
-	authentication_classes = [SessionAuthentication]
-	
-	def get(self, request):
-		print(request.user)
-		print(dir(request.user))
-		return Response({"msg": "ok"})
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request):
+        print(request.user)
+        print(dir(request.user))
+        return Response({"msg": "ok"})
 
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 
 class ExampleInfoView(APIView):
-	pass
+    pass
 
 
 """
@@ -39,56 +39,56 @@ from rest_framework import status
 
 
 class OptModelViewSet(ModelViewSet):
-	queryset = Student.objects.all()
-	serializer_class = StudentModelSerializers
-	filter_backends = [DjangoFilterBackend]
-	filter_fields = ["sex", "classmate"]
+    queryset = Student.objects.all()
+    serializer_class = StudentModelSerializers
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ["sex", "classmate"]
 
 
 from rest_framework.views import APIView
 
 
 class OptAPIView(APIView):
-	filter_backends = [DjangoFilterBackend]
-	filter_fields = ["sex", "classmate"]
-	
-	def get(self, request):
-		# 1.获取数据库中内容
-		db_data = Student.objects.all()
-		
-		# 2. 实例化序列化器,获取序列化对象
-		serializer = StudentModelSerializers(instance=db_data, many=True)
-		
-		# 3. 序列化从数据库中得到的内容并返回给客户端
-		return Response(serializer.data, status=status.HTTP_200_OK)
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ["sex", "classmate"]
+
+    def get(self, request):
+        # 1.获取数据库中内容
+        db_data = Student.objects.all()
+
+        # 2. 实例化序列化器,获取序列化对象
+        serializer = StudentModelSerializers(instance=db_data, many=True)
+
+        # 3. 序列化从数据库中得到的内容并返回给客户端
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 from rest_framework.generics import GenericAPIView
 
 
 class OptGenericAPIView(GenericAPIView):
-	queryset = Student.objects.all()
-	serializer_class = StudentModelSerializers
-	filter_backends = [DjangoFilterBackend]
-	filter_fields = ["sex", "classmate"]
-	
-	def get(self, request):
-		# 1. 从数据库中读取学生列表信息
-		instance = self.get_queryset()  # GenericAPIView提供的 get_queryset
-		# 2. 序列化
-		serializer = self.get_serializer(instance=instance, many=True)
-		
-		# 3.转换数据并返回给客户端
-		return Response(serializer.data, status=status.HTTP_200_OK)
-	
-	
+    queryset = Student.objects.all()
+    serializer_class = StudentModelSerializers
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ["sex", "classmate"]
+
+    def get(self, request):
+        # 1. 从数据库中读取学生列表信息
+        instance = self.get_queryset()  # GenericAPIView提供的 get_queryset
+        # 2. 序列化
+        serializer = self.get_serializer(instance=instance, many=True)
+
+        # 3.转换数据并返回给客户端
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 
 
 class OptMixinAPIView(GenericAPIView, ListModelMixin):
-	queryset = Student.objects.all()
-	serializer_class = StudentModelSerializers
-	
-	def get(self, request):
-		return self.list(request)
+    queryset = Student.objects.all()
+    serializer_class = StudentModelSerializers
+
+    def get(self, request):
+        return self.list(request)

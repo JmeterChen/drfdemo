@@ -4,7 +4,9 @@ from django.shortcuts import render
 
 
 from rest_framework.views import APIView
-from rest_framework.response import Response        # drf 的 Response对象是 Django 的HttpResponse的子类
+from rest_framework.response import (
+    Response,
+)  # drf 的 Response对象是 Django 的HttpResponse的子类
 
 from django.views import View
 from django.http.response import JsonResponse
@@ -13,12 +15,13 @@ from rest_framework import status
 
 class StudentView(View):
     def get(self, request):  # django提供的View视图，在视图方法中传入的request变量是 WSGIRequest
-        print(f"request={request}")  # WSGIRequest -->父类--> django.http.request.HttpRequest
+        print(
+            f"request={request}"
+        )  # WSGIRequest -->父类--> django.http.request.HttpRequest
         return JsonResponse({"msg": "ok"})
 
 
 class StudentAPIView(APIView):
-
     def get(self, request):
         # rest_framework.request.Request 是属于 drf单独声明的请求处理对象，与Django 提供的HttpRequest不是同一个，甚至没有任何继承关系
         print(f"drf.request={request}")
@@ -50,7 +53,10 @@ class StudentAPIView(APIView):
         # 请求参数 info=NBA,CBA， 解析结果： NBA,CBA 类型为字符串
         print(request.query_params.get("info"), type(request.query_params.get("info")))
         # 请求参数 info=NBA,CBA， 解析结果： 【NBA,CBA】 类型为列表
-        print(request.query_params.getlist("info"), type(request.query_params.getlist("info")))
+        print(
+            request.query_params.getlist("info"),
+            type(request.query_params.getlist("info")),
+        )
 
         return Response({"msg": "ok"}, status=status.HTTP_201_CREATED)
 

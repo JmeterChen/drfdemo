@@ -15,10 +15,5 @@ class StudentModelSerializers(serializers.ModelSerializer):
         fields = "__all__"
         # fields = ["product_id", "product_name", "operator"]
         extra_kwargs = {
-            "age": {
-                "max_value": 25,
-                "error_messages": {
-                    "max_value": "年龄不能超过25岁！"
-                }
-            }
+            "age": {"max_value": 25, "error_messages": {"max_value": "年龄不能超过25岁！"}}
         }

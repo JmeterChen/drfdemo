@@ -19,4 +19,4 @@ class TbUser(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'tb_user'
+        db_table = "tb_user"
